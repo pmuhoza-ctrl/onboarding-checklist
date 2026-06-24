@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Device Provisioning Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2335;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --muted: #7a8099;
+    --dim: #4a5068;
+    --accent: #4f8ef7;
+    --accent-bg: rgba(79,142,247,0.12);
+    --accent-border: rgba(79,142,247,0.3);
+    --green: #3ecf8e;
+    --green-bg: rgba(62,207,142,0.1);
+    --green-border: rgba(62,207,142,0.25);
+    --amber: #f59e0b;
+    --amber-bg: rgba(245,158,11,0.1);
+    --amber-border: rgba(245,158,11,0.3);
+    --blue-pill: rgba(79,142,247,0.15);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -.02em;
+    margin-bottom: .25rem;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Mode tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+
+  .tab:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
+  .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Progress */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width .35s cubic-bezier(.4,0,.2,1);
+  }
+
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 44px;
+    text-align: right;
+  }
+
+  .reset-btn {
+    font-family: var(--font);
+    font-size: 12px;
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .reset-btn:hover { color: var(--muted); border-color: var(--border2); }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 4px; }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background .12s, border-color .12s;
+    position: relative;
+  }
+
+  .step:hover { background: var(--surface2); border-color: var(--border); }
+
+  .step.done {
+    background: var(--green-bg);
+    border-color: var(--green-border);
+  }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    min-width: 20px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .step.done .step-num { color: var(--green); }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--dim);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+    margin-top: 1px;
+  }
+
+  .step.done .check-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .check-icon {
+    display: none;
+    width: 11px;
+    height: 11px;
+    stroke: #fff;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .step.done .check-icon { display: block; }
+
+  .step-body { flex: 1; min-width: 0; }
+
+  .step-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    transition: color .12s;
+  }
+
+  .step.done .step-text {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--green);
+  }
+
+  .step-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  .step.done .step-note { color: var(--dim); }
+
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+  }
+
+  .badge-warn { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-info { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+
+  /* Section dividers */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--dim);
+    text-transform: uppercase;
+    padding: 1rem 0 .4rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: .5rem;
+    margin-top: .5rem;
+  }
+
+  /* Complete state */
+  .complete-banner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 1rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--green);
+  }
+
+  .complete-banner.visible { display: flex; }
+
+  .complete-banner svg { flex-shrink: 0; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    h1 { font-size: 1.3rem; }
+    .step { padding: 10px 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow">Device provisioning</div>
+    <h1>Commissioning checklist</h1>
+    <p class="subtitle">Tap a step to mark it complete. Progress saves automatically.</p>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" onclick="switchMode(0)">KK only</button>
+    <button class="tab" onclick="switchMode(1)">Cumulosity only</button>
+    <button class="tab" onclick="switchMode(2)">Dual endpoint</button>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <span class="progress-label" id="prog-label">0 / 0</span>
+    <button class="reset-btn" onclick="resetCurrent()">Reset</button>
+  </div>
+
+  <div class="complete-banner" id="complete-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    All steps complete — device commissioned.
+  </div>
+
+  <div class="steps" id="steps"></div>
+</div>
+
+<script>
+const MODES = [
+  {
+    key: 'kk',
+    steps: [
+      { text: 'FOTA' },
+      { text: 'Roll BLUE key', note: 'Firmware < v2.6.2 only', badges: ['warn'] },
+      { text: 'Move to account' },
+      { text: 'Wake until moved' },
+      { text: 'Configure for ticket', note: 'NZ, AU, INT, NB-IoT, CATM1, etc.' },
+      { text: 'Last config', note: 'Switch SIM & dormant mode — do together' },
+    ]
+  },
+  {
+    key: 'cumu',
+    steps: [
+      { text: 'FOTA' },
+      { text: 'Roll BLUE key', note: 'Disable after use', badges: ['warn'] },
+      { text: 'Queue server', note: 'KK script: S2ConfigurationWithC8YServerOnly — gives Cumulosity server on management tenant (watercare or other tenant are different)' },
+      { text: 'Register device', note: 'Onboard — see AA note in Documents\\Cumulocity Scripting', section: 'Cumulosity scripts' },
+      { text: 'Bootstrap', note: 'Shell command — choose Cumulosity › fresh_conn' },
+      { text: 'Queue device config', note: 'See AA notes' },
+      { text: 'Test sensors', note: 'Flow and radar' },
+      { text: 'Disable Bluetooth' },
+      { text: 'Introduce networks', note: 'See AA notes', section: 'Network' },
+      { text: 'Switch network then dormant mode', note: 'Do together' },
+    ]
+  },
+  {
+    key: 'dual',
+    steps: [
+      { text: 'FOTA' },
+      { text: 'Roll BLUE key', note: 'Firmware < v2.6.2 only', badges: ['warn'] },
+      { text: 'Queue server', note: 'Using KK script' },
+      { text: 'Register device', note: 'Using Cumu script — see AA note in Documents\\Cumulocity Scripting', section: 'Cumulosity scripts' },
+      { text: 'Bootstrap', note: 'Shell command — choose Cumulosity › greedy' },
+      { text: 'Queue device config', note: 'Search in KK scripts' },
+      { text: 'Test sensors and dual endpoints' },
+      { text: 'Check SLAVE ID', note: 'Dual radar devices only', badges: ['info'] },
+      { text: 'Check networks', section: 'Network' },
+      { text: 'Last config & dormant mode' },
+    ]
+  }
+];
+
+let currentMode = 0;
+
+function loadChecks(key) {
+  try { return JSON.parse(localStorage.getItem('checks_' + key) || '{}'); } catch { return {}; }
+}
+
+function saveChecks(key, checks) {
+  try { localStorage.setItem('checks_' + key, JSON.stringify(checks)); } catch {}
+}
+
+function toggleStep(idx) {
+  const mode = MODES[currentMode];
+  const checks = loadChecks(mode.key);
+  checks[idx] = !checks[idx];
+  saveChecks(mode.key, checks);
+  render();
+}
+
+function switchMode(idx) {
+  currentMode = idx;
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  render();
+}
+
+function resetCurrent() {
+  const mode = MODES[currentMode];
+  saveChecks(mode.key, {});
+  render();
+}
+
+function render() {
+  const mode = MODES[currentMode];
+  const checks = loadChecks(mode.key);
+  const total = mode.steps.length;
+  const done = mode.steps.filter((_, i) => checks[i]).length;
+
+  document.getElementById('prog-fill').style.width = (total ? Math.round(done / total * 100) : 0) + '%';
+  document.getElementById('prog-label').textContent = done + ' / ' + total;
+
+  const banner = document.getElementById('complete-banner');
+  banner.classList.toggle('visible', done === total);
+
+  let html = '';
+  let lastSection = null;
+
+  mode.steps.forEach((s, i) => {
+    if (s.section && s.section !== lastSection) {
+      html += '<div class="section-label">' + s.section + '</div>';
+      lastSection = s.section;
+    }
+
+    const isDone = !!checks[i];
+    html += '<div class="step' + (isDone ? ' done' : '') + '" onclick="toggleStep(' + i + ')">';
+    html += '<div class="step-num">' + (i + 1).toString().padStart(2, '0') + '</div>';
+    html += '<div class="check-box"><svg class="check-icon" viewBox="0 0 12 12"><polyline points="1.5 6 4.5 9 10.5 3"/></svg></div>';
+    html += '<div class="step-body">';
+    html += '<div class="step-text">' + s.text + '</div>';
+    if (s.note) html += '<div class="step-note">' + s.note + '</div>';
+    if (s.badges && s.badges.length) {
+      html += '<div class="badges">';
+      s.badges.forEach(b => {
+        if (b === 'warn') html += '<span class="badge badge-warn">⚠ &lt; v2.6.2 only</span>';
+        if (b === 'info') html += '<span class="badge badge-info">dual radar only</span>';
+      });
+      html += '</div>';
+    }
+    html += '</div></div>';
+  });
+
+  document.getElementById('steps').innerHTML = html;
+}
+
+// Restore last used mode
+try {
+  const saved = parseInt(localStorage.getItem('last_mode') || '0');
+  if (saved >= 0 && saved < MODES.length) {
+    currentMode = saved;
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === currentMode));
+  }
+} catch {}
+
+window.addEventListener('beforeunload', () => {
+  try { localStorage.setItem('last_mode', currentMode); } catch {}
+});
+
+render();
+</script>
+</body>
+</html>
