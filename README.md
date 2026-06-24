@@ -26,8 +26,6 @@ Open the page, select your provisioning mode from the tabs at the top, and tap e
 ## Notes
 
 - Progress is stored in your browser's local storage — it does not sync across devices or browsers
-- The BLUE key step applies to firmware versions below v2.6.2 only
-- The SLAVE ID check is for dual radar devices only
 
 ## Managed by
 
