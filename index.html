@@ -365,6 +365,107 @@
   .device-table .mono { font-family: var(--mono); color: var(--accent); font-size: 11px; }
   .device-table .model { color: var(--muted); }
 
+  /* ── Order bar ── */
+  .order-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .order-input-wrap {
+    position: relative;
+    flex: 1;
+  }
+
+  .order-input {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 13px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .order-input::placeholder { color: var(--dim); }
+  .order-input:focus { border-color: var(--accent); }
+
+  .order-btn {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent-border);
+    background: var(--accent-bg);
+    color: var(--accent);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+  }
+  .order-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .order-pills-wrap {
+    display: none;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .order-pills-wrap.visible { display: flex; }
+
+  .order-pill {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .order-pill:hover { color: var(--text); background: var(--surface2); }
+  .order-pill.active { background: var(--surface2); border-color: var(--accent); color: var(--text); }
+
+  .order-pill-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 11px;
+    line-height: 1;
+    color: var(--dim);
+    transition: all .12s;
+    margin-left: 2px;
+  }
+  .order-pill:hover .order-pill-delete,
+  .order-pill.active .order-pill-delete { color: var(--muted); }
+  .order-pill-delete:hover { background: rgba(239,68,68,0.2); color: #ef4444 !important; }
+
+  /* checklist locked until order selected */
+  .checklist-locked { display: none; }
+  .checklist-locked.visible { display: block; }
+
+  .no-order-msg {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--dim);
+    font-size: 14px;
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+  }
+  .no-order-msg strong { color: var(--muted); display: block; margin-bottom: .4rem; font-size: 15px; }
+
   @media (max-width: 480px) {
     h1 { font-size: 1.3rem; }
     .step { padding: 10px 12px; }
@@ -379,28 +480,47 @@
 <div class="container">
   <header>
     <div class="eyebrow">Pilote's notes · Onboarding</div>
-    <h1>Onboarding checklist</h1>
-    <p class="subtitle">Click a step to open notes · Click the checkbox to mark complete</p>
+    <h1>Commissioning checklist</h1>
+    <p class="subtitle">Enter an order name to begin · progress saves per order</p>
   </header>
 
-  <div class="tabs" id="tabs">
-    <button class="tab active" onclick="switchMode(0)">KK only</button>
-    <button class="tab" onclick="switchMode(1)">Cumulosity only</button>
-    <button class="tab" onclick="switchMode(2)">Dual endpoint</button>
+  <!-- Order entry -->
+  <div class="order-bar">
+    <div class="order-input-wrap">
+      <input class="order-input" id="order-input" type="text" placeholder="Enter order name…" onkeydown="handleOrderKey(event)" autocomplete="off" />
+    </div>
+    <button class="order-btn" onclick="loadOrCreateOrder()">Open</button>
   </div>
 
-  <div class="progress-row">
-    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-    <span class="progress-label" id="prog-label">0 / 0</span>
-    <button class="reset-btn" onclick="resetCurrent()">Reset</button>
+  <!-- Saved orders as pill tabs -->
+  <div class="order-pills-wrap" id="order-pills-wrap"></div>
+
+  <!-- No order state -->
+  <div id="no-order-msg" class="no-order-msg">
+    <strong>No order open</strong>Type an order name above and click <em>Open</em> to start — or pick a saved order from the dropdown.
   </div>
 
-  <div class="complete-banner" id="complete-banner">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-    All steps complete — device commissioned.
-  </div>
+  <!-- Checklist (hidden until order loaded) -->
+  <div class="checklist-locked" id="checklist-wrap">
+    <div class="tabs" id="tabs">
+      <button class="tab active" onclick="switchMode(0)">KK only</button>
+      <button class="tab" onclick="switchMode(1)">Cumulosity only</button>
+      <button class="tab" onclick="switchMode(2)">Dual endpoint</button>
+    </div>
 
-  <div class="steps" id="steps"></div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <span class="progress-label" id="prog-label">0 / 0</span>
+      <button class="reset-btn" onclick="resetCurrent()">Reset mode</button>
+    </div>
+
+    <div class="complete-banner" id="complete-banner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      All steps complete — device commissioned.
+    </div>
+
+    <div class="steps" id="steps"></div>
+  </div>
 </div>
 
 <!-- Popover -->
@@ -509,7 +629,7 @@ const MODES = [
     key: 'kk',
     steps: [
       { text: 'FOTA' },
-      { text: 'Roll BLUE key', note: 'Firmware > v2.6.2 only', badges: ['warn'] },
+      { text: 'Roll BLUE key', note: 'Firmware < v2.6.2 only', badges: ['warn'] },
       { text: 'Move to account' },
       { text: 'Wake until moved' },
       { text: 'Configure for ticket', note: 'NZ, AU, INT, NB-IoT, CATM1, etc.' },
@@ -540,7 +660,7 @@ const MODES = [
     key: 'dual',
     steps: [
       { text: 'FOTA' },
-      { text: 'Roll BLUE key', note: 'Firmware > v2.6.2 only', badges: ['warn'] },
+      { text: 'Roll BLUE key', note: 'Firmware < v2.6.2 only', badges: ['warn'] },
       { text: 'Queue server', note: 'Using KK script' },
       { text: 'Register device', note: 'Using Cumu script — see AA notes', aaNote: 'register', section: 'Cumulosity scripts' },
       { text: 'Bootstrap', note: 'Shell command — choose Cumulosity › greedy' },
@@ -558,12 +678,128 @@ const MODES = [
 
 // ── State ──────────────────────────────────────────────────────────────
 let currentMode = 0;
+let currentOrder = null; // e.g. "Order 123"
 
-function loadChecks(key) {
-  try { return JSON.parse(localStorage.getItem('checks_' + key) || '{}'); } catch { return {}; }
+// Storage helpers — keyed by order + mode
+function orderModeKey(order, modeKey) {
+  return 'o:' + order + ':' + modeKey;
 }
-function saveChecks(key, checks) {
-  try { localStorage.setItem('checks_' + key, JSON.stringify(checks)); } catch {}
+
+function loadChecks(modeKey) {
+  if (!currentOrder) return {};
+  try { return JSON.parse(localStorage.getItem(orderModeKey(currentOrder, modeKey)) || '{}'); } catch { return {}; }
+}
+
+function saveChecks(modeKey, checks) {
+  if (!currentOrder) return;
+  try { localStorage.setItem(orderModeKey(currentOrder, modeKey), JSON.stringify(checks)); } catch {}
+}
+
+// Order list helpers
+function getOrders() {
+  try { return JSON.parse(localStorage.getItem('orders') || '[]'); } catch { return []; }
+}
+
+function saveOrders(list) {
+  try { localStorage.setItem('orders', JSON.stringify(list)); } catch {}
+}
+
+function addOrderToList(name) {
+  const list = getOrders();
+  if (!list.includes(name)) { list.unshift(name); saveOrders(list); }
+}
+
+function removeOrderFromList(name) {
+  saveOrders(getOrders().filter(o => o !== name));
+}
+
+// ── Order UI ───────────────────────────────────────────────────────────
+function handleOrderKey(e) {
+  if (e.key === 'Enter') loadOrCreateOrder();
+}
+
+function loadOrCreateOrder() {
+  const input = document.getElementById('order-input');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+  currentOrder = name;
+  addOrderToList(name);
+  // Restore saved mode for this order
+  try {
+    const savedMode = parseInt(localStorage.getItem('o:' + name + ':mode') || '0');
+    if (savedMode >= 0 && savedMode < MODES.length) currentMode = savedMode;
+    else currentMode = 0;
+  } catch { currentMode = 0; }
+  input.value = '';
+  updateOrderUI();
+  render();
+}
+
+function switchOrder(name) {
+  if (!name) return;
+  currentOrder = name;
+  try {
+    const savedMode = parseInt(localStorage.getItem('o:' + name + ':mode') || '0');
+    currentMode = (savedMode >= 0 && savedMode < MODES.length) ? savedMode : 0;
+  } catch { currentMode = 0; }
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === currentMode));
+  updateOrderUI();
+  render();
+}
+
+function deletePill(e, name) {
+  e.stopPropagation();
+  if (!confirm('Delete order "' + name + '"? This cannot be undone.')) return;
+  MODES.forEach(m => {
+    try { localStorage.removeItem(orderModeKey(name, m.key)); } catch {}
+  });
+  try { localStorage.removeItem('o:' + name + ':mode'); } catch {}
+  removeOrderFromList(name);
+  if (currentOrder === name) {
+    currentOrder = null;
+    currentMode = 0;
+    renderEmpty();
+  }
+  updateOrderUI();
+}
+
+function updateOrderUI() {
+  const orders = getOrders();
+  const pillsWrap = document.getElementById('order-pills-wrap');
+  const noMsg = document.getElementById('no-order-msg');
+  const wrap = document.getElementById('checklist-wrap');
+
+  // Render order pills
+  if (orders.length > 0) {
+    pillsWrap.classList.add('visible');
+    pillsWrap.innerHTML = orders.map(o => {
+      const isActive = o === currentOrder;
+      const safe = o.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      return '<button class="order-pill' + (isActive ? ' active' : '') + '" onclick="switchOrder(\'' + safe + '\')">'
+        + o
+        + '<span class="order-pill-delete" onclick="deletePill(event, \'' + safe + '\')">✕</span>'
+        + '</button>';
+    }).join('');
+  } else {
+    pillsWrap.classList.remove('visible');
+    pillsWrap.innerHTML = '';
+  }
+
+  if (currentOrder) {
+    noMsg.style.display = 'none';
+    wrap.classList.add('visible');
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === currentMode));
+  } else {
+    noMsg.style.display = '';
+    wrap.classList.remove('visible');
+  }
+}
+
+function renderEmpty() {
+  document.getElementById('steps').innerHTML = '';
+  document.getElementById('prog-fill').style.width = '0%';
+  document.getElementById('prog-label').textContent = '0 / 0';
+  document.getElementById('complete-banner').classList.remove('visible');
 }
 
 function toggleStep(idx, e) {
@@ -577,11 +813,16 @@ function toggleStep(idx, e) {
 
 function switchMode(idx) {
   currentMode = idx;
+  if (currentOrder) {
+    try { localStorage.setItem('o:' + currentOrder + ':mode', idx); } catch {}
+  }
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
   render();
 }
 
 function resetCurrent() {
+  if (!currentOrder) return;
+  if (!confirm('Reset all steps for this mode?')) return;
   saveChecks(MODES[currentMode].key, {});
   render();
 }
@@ -719,22 +960,25 @@ function render() {
   document.getElementById('steps').innerHTML = html;
 }
 
-// Restore last mode
+// ── Init ───────────────────────────────────────────────────────────────
+// Restore last active order on page load
 try {
-  const saved = parseInt(localStorage.getItem('last_mode') || '0');
-  if (saved >= 0 && saved < MODES.length) {
-    currentMode = saved;
-    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === currentMode));
+  const lastOrder = localStorage.getItem('last_order');
+  if (lastOrder && getOrders().includes(lastOrder)) {
+    currentOrder = lastOrder;
+    const savedMode = parseInt(localStorage.getItem('o:' + lastOrder + ':mode') || '0');
+    currentMode = (savedMode >= 0 && savedMode < MODES.length) ? savedMode : 0;
   }
 } catch {}
 
 window.addEventListener('beforeunload', () => {
-  try { localStorage.setItem('last_mode', currentMode); } catch {}
+  try { if (currentOrder) localStorage.setItem('last_order', currentOrder); } catch {}
 });
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopover(); });
 
-render();
+updateOrderUI();
+if (currentOrder) render();
 </script>
 </body>
 </html>
