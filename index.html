@@ -466,6 +466,82 @@
   }
   .no-order-msg strong { color: var(--muted); display: block; margin-bottom: .4rem; font-size: 15px; }
 
+  /* ── Order note + priority ── */
+  .order-note-wrap {
+    display: none;
+    margin-bottom: 1.25rem;
+  }
+  .order-note-wrap.visible { display: block; }
+
+  .order-note-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .order-note-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--dim);
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .priority-btns {
+    display: flex;
+    gap: 5px;
+  }
+
+  .priority-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .priority-btn.p-red   { background: rgba(239,68,68,0.25);  border-color: rgba(239,68,68,0.4); }
+  .priority-btn.p-amber { background: rgba(245,158,11,0.25); border-color: rgba(245,158,11,0.4); }
+  .priority-btn.p-green { background: rgba(62,207,142,0.25); border-color: rgba(62,207,142,0.4); }
+  .priority-btn.p-red.selected   { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.25); }
+  .priority-btn.p-amber.selected { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.25); }
+  .priority-btn.p-green.selected { background: #3ecf8e; border-color: #3ecf8e; box-shadow: 0 0 0 3px rgba(62,207,142,0.25); }
+  .priority-btn:hover { transform: scale(1.15); }
+
+  .order-note-textarea {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 13px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 72px;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color .15s;
+  }
+  .order-note-textarea::placeholder { color: var(--dim); }
+  .order-note-textarea:focus { border-color: var(--accent); }
+
+  /* left border colour based on priority */
+  .order-note-textarea.pri-red   { border-left: 3px solid #ef4444; }
+  .order-note-textarea.pri-amber { border-left: 3px solid #f59e0b; }
+  .order-note-textarea.pri-green { border-left: 3px solid #3ecf8e; }
+
+  .order-note-saved {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 5px;
+    height: 14px;
+    transition: opacity .3s;
+  }
+
   @media (max-width: 480px) {
     h1 { font-size: 1.3rem; }
     .step { padding: 10px 12px; }
@@ -498,6 +574,20 @@
   <!-- No order state -->
   <div id="no-order-msg" class="no-order-msg">
     <strong>No order open</strong>Type an order name above and click <em>Open</em> to start — or pick a saved order from the dropdown.
+  </div>
+
+  <!-- Order note + priority -->
+  <div class="order-note-wrap" id="order-note-wrap">
+    <div class="order-note-header">
+      <span class="order-note-label">Order note</span>
+      <div class="priority-btns">
+        <button class="priority-btn p-green" title="Low priority" onclick="setPriority('green')"></button>
+        <button class="priority-btn p-amber" title="Medium priority" onclick="setPriority('amber')"></button>
+        <button class="priority-btn p-red"   title="High priority"  onclick="setPriority('red')"></button>
+      </div>
+    </div>
+    <textarea class="order-note-textarea" id="order-note-textarea" placeholder="Add a note for this order…" oninput="saveNote()" rows="3"></textarea>
+    <div class="order-note-saved" id="order-note-saved"></div>
   </div>
 
   <!-- Checklist (hidden until order loaded) -->
@@ -754,6 +844,8 @@ function deletePill(e, name) {
     try { localStorage.removeItem(orderModeKey(name, m.key)); } catch {}
   });
   try { localStorage.removeItem('o:' + name + ':mode'); } catch {}
+  try { localStorage.removeItem('o:' + name + ':note'); } catch {}
+  try { localStorage.removeItem('o:' + name + ':priority'); } catch {}
   removeOrderFromList(name);
   if (currentOrder === name) {
     currentOrder = null;
@@ -763,19 +855,80 @@ function deletePill(e, name) {
   updateOrderUI();
 }
 
+// ── Order note + priority ───────────────────────────────────────────────
+function noteKey(order) { return 'o:' + order + ':note'; }
+function priorityKey(order) { return 'o:' + order + ':priority'; }
+
+function loadNote() {
+  if (!currentOrder) return;
+  const textarea = document.getElementById('order-note-textarea');
+  const saved = localStorage.getItem(noteKey(currentOrder)) || '';
+  textarea.value = saved;
+  const pri = localStorage.getItem(priorityKey(currentOrder)) || '';
+  applyPriorityUI(pri);
+}
+
+function saveNote() {
+  if (!currentOrder) return;
+  const val = document.getElementById('order-note-textarea').value;
+  localStorage.setItem(noteKey(currentOrder), val);
+  const saved = document.getElementById('order-note-saved');
+  saved.textContent = 'Saved';
+  clearTimeout(window._noteSaveTimer);
+  window._noteSaveTimer = setTimeout(() => { saved.textContent = ''; }, 1500);
+}
+
+function setPriority(color) {
+  if (!currentOrder) return;
+  const current = localStorage.getItem(priorityKey(currentOrder)) || '';
+  const next = current === color ? '' : color;
+  localStorage.setItem(priorityKey(currentOrder), next);
+  applyPriorityUI(next);
+}
+
+function applyPriorityUI(color) {
+  const textarea = document.getElementById('order-note-textarea');
+  const btns = document.querySelectorAll('.priority-btn');
+  textarea.className = 'order-note-textarea' + (color ? ' pri-' + color : '');
+  btns.forEach(b => {
+    const isMatch = color && b.classList.contains('p-' + color);
+    b.classList.toggle('selected', !!isMatch);
+  });
+  // Also update the active order pill border in the pills list
+  updatePillColors();
+}
+
+function updatePillColors() {
+  const orders = getOrders();
+  const pillsWrap = document.getElementById('order-pills-wrap');
+  if (!pillsWrap) return;
+  orders.forEach(o => {
+    const pri = localStorage.getItem(priorityKey(o)) || '';
+    const pills = pillsWrap.querySelectorAll('.order-pill');
+    pills.forEach(p => {
+      if (p.textContent.replace('✕','').trim() === o || p.getAttribute('data-order') === o) {
+        p.style.borderColor = pri === 'red' ? '#ef4444' : pri === 'amber' ? '#f59e0b' : pri === 'green' ? '#3ecf8e' : '';
+      }
+    });
+  });
+}
+
 function updateOrderUI() {
   const orders = getOrders();
   const pillsWrap = document.getElementById('order-pills-wrap');
   const noMsg = document.getElementById('no-order-msg');
   const wrap = document.getElementById('checklist-wrap');
+  const noteWrap = document.getElementById('order-note-wrap');
 
-  // Render order pills
+  // Render order pills with priority colour borders
   if (orders.length > 0) {
     pillsWrap.classList.add('visible');
     pillsWrap.innerHTML = orders.map(o => {
       const isActive = o === currentOrder;
       const safe = o.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-      return '<button class="order-pill' + (isActive ? ' active' : '') + '" onclick="switchOrder(\'' + safe + '\')">'
+      const pri = localStorage.getItem('o:' + o + ':priority') || '';
+      const borderStyle = pri === 'red' ? 'border-color:#ef4444' : pri === 'amber' ? 'border-color:#f59e0b' : pri === 'green' ? 'border-color:#3ecf8e' : '';
+      return '<button class="order-pill' + (isActive ? ' active' : '') + '" data-order="' + safe + '" style="' + borderStyle + '" onclick="switchOrder(\'' + safe + '\')">'
         + o
         + '<span class="order-pill-delete" onclick="deletePill(event, \'' + safe + '\')">✕</span>'
         + '</button>';
@@ -788,10 +941,13 @@ function updateOrderUI() {
   if (currentOrder) {
     noMsg.style.display = 'none';
     wrap.classList.add('visible');
+    noteWrap.classList.add('visible');
+    loadNote();
     document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === currentMode));
   } else {
     noMsg.style.display = '';
     wrap.classList.remove('visible');
+    noteWrap.classList.remove('visible');
   }
 }
 
@@ -800,6 +956,7 @@ function renderEmpty() {
   document.getElementById('prog-fill').style.width = '0%';
   document.getElementById('prog-label').textContent = '0 / 0';
   document.getElementById('complete-banner').classList.remove('visible');
+  document.getElementById('order-note-wrap').classList.remove('visible');
 }
 
 function toggleStep(idx, e) {
