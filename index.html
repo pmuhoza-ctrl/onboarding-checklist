@@ -509,7 +509,7 @@ const MODES = [
     key: 'kk',
     steps: [
       { text: 'FOTA' },
-      { text: 'Roll BLUE key', note: 'Firmware < v2.6.2 only', badges: ['warn'] },
+      { text: 'Roll BLUE key', note: 'Firmware > v2.6.2 only', badges: ['warn'] },
       { text: 'Move to account' },
       { text: 'Wake until moved' },
       { text: 'Configure for ticket', note: 'NZ, AU, INT, NB-IoT, CATM1, etc.' },
@@ -540,7 +540,7 @@ const MODES = [
     key: 'dual',
     steps: [
       { text: 'FOTA' },
-      { text: 'Roll BLUE key', note: 'Firmware < v2.6.2 only', badges: ['warn'] },
+      { text: 'Roll BLUE key', note: 'Firmware > v2.6.2 only', badges: ['warn'] },
       { text: 'Queue server', note: 'Using KK script' },
       { text: 'Register device', note: 'Using Cumu script — see AA notes', aaNote: 'register', section: 'Cumulosity scripts' },
       { text: 'Bootstrap', note: 'Shell command — choose Cumulosity › greedy' },
