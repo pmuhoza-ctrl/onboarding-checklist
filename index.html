@@ -196,6 +196,7 @@
   }
   .badge-warn { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
   .badge-info { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+  .badge-sensor { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
 
   .section-label {
     font-family: var(--mono);
@@ -556,7 +557,7 @@
 <div class="container">
   <header>
     <div class="eyebrow">Pilote's notes · Onboarding</div>
-    <h1>Onboarding checklist</h1>
+    <h1>Commissioning checklist</h1>
     <p class="subtitle">Enter an order name to begin · progress saves per order</p>
   </header>
 
@@ -737,11 +738,12 @@ const MODES = [
       { text: 'Register device', note: 'Onboard — see AA notes', aaNote: 'register', section: 'Cumulosity scripts' },
       { text: 'Bootstrap', note: 'Shell command — choose Cumulosity › fresh_conn' },
       { text: 'Queue device config', note: 'See AA notes', aaNote: 'deviceconfig' },
-      { text: 'Test sensors', note: 'Flow and radar' },
+      { text: 'Test sensors', note: 'Flow, radar, pressure', badges: ['sensor'] },
       { text: 'Disable Bluetooth' },
       { text: 'Introduce networks', note: 'See AA notes', section: 'Network' },
       { text: 'Switch network then dormant mode', note: 'Do together' },
-      { text: 'Update spreadsheet', section: 'Checking' },
+      { text: 'Add dashboard to Cumulosity', section: 'Checking' },
+      { text: 'Update spreadsheet' },
       { text: 'Update ticket' },
       { text: 'Health report' },
     ]
@@ -755,11 +757,12 @@ const MODES = [
       { text: 'Register device', note: 'Using Cumu script — see AA notes', aaNote: 'register', section: 'Cumulosity scripts' },
       { text: 'Bootstrap', note: 'Shell command — choose Cumulosity › greedy' },
       { text: 'Queue device config', note: 'Search in KK scripts — see AA notes', aaNote: 'deviceconfig' },
-      { text: 'Test sensors and dual endpoints' },
+      { text: 'Test sensors and dual endpoints', note: 'Flow, radar, pressure', badges: ['sensor'] },
       { text: 'Check SLAVE ID', note: 'Dual radar devices only', badges: ['info'] },
       { text: 'Check networks', section: 'Network' },
       { text: 'Last config & dormant mode' },
-      { text: 'Update spreadsheet', section: 'Checking' },
+      { text: 'Add dashboard to Cumulosity', section: 'Checking' },
+      { text: 'Update spreadsheet' },
       { text: 'Update ticket' },
       { text: 'Health report' },
     ]
@@ -1103,6 +1106,7 @@ function render() {
         s.badges.forEach(b => {
           if (b === 'warn') html += '<span class="badge badge-warn">⚠ &lt; v2.6.2 only</span>';
           if (b === 'info') html += '<span class="badge badge-info">dual radar only</span>';
+          if (b === 'sensor') html += '<span class="badge badge-sensor">⚠ flow · radar · pressure</span>';
         });
       }
       if (hasAA) {
