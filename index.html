@@ -43,7 +43,6 @@
   }
 
   .container { max-width: 720px; margin: 0 auto; }
-
   header { margin-bottom: 2rem; }
 
   .eyebrow {
@@ -83,10 +82,8 @@
   .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
-
   .progress-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .35s cubic-bezier(.4,0,.2,1); }
-
   .progress-label { font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 44px; text-align: right; }
 
   .reset-btn {
@@ -117,8 +114,6 @@
   }
   .step:hover { background: var(--surface2); border-color: var(--border); }
   .step.done { background: var(--green-bg); border-color: var(--green-border); }
-
-  /* Steps with notes — clicking the row opens the popover, not checks */
   .step.has-note { cursor: default; }
   .step.has-note:hover { background: var(--surface2); border-color: var(--border); }
 
@@ -133,18 +128,14 @@
   .step.done .step-num { color: var(--green); }
 
   .check-box {
-    width: 20px;
-    height: 20px;
+    width: 20px; height: 20px;
     border-radius: 6px;
     border: 1.5px solid var(--dim);
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     transition: all .15s;
     margin-top: 1px;
     cursor: pointer;
-    flex-shrink: 0;
   }
   .step.done .check-box { background: var(--green); border-color: var(--green); }
 
@@ -157,14 +148,11 @@
   .step.done .check-icon { display: block; }
 
   .step-body { flex: 1; min-width: 0; }
-
   .step-text { font-size: 14px; font-weight: 500; color: var(--text); transition: color .12s; }
   .step.done .step-text { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--green); }
-
   .step-note-short { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
   .step.done .step-note-short { color: var(--dim); }
 
-  /* AA note indicator */
   .note-trigger {
     display: inline-flex;
     align-items: center;
@@ -194,8 +182,8 @@
     letter-spacing: .03em;
     text-transform: uppercase;
   }
-  .badge-warn { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-  .badge-info { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+  .badge-warn   { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-info   { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
   .badge-sensor { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
 
   .section-label {
@@ -226,12 +214,7 @@
   .complete-banner.visible { display: flex; }
 
   /* ── Popover ── */
-  .popover-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-  }
+  .popover-backdrop { display: none; position: fixed; inset: 0; z-index: 100; }
   .popover-backdrop.open { display: block; }
 
   .popover {
@@ -248,262 +231,115 @@
   .popover.open { display: block; }
 
   .popover-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 14px 16px 12px;
     border-bottom: 1px solid var(--border);
   }
-
-  .popover-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
+  .popover-title { font-size: 13px; font-weight: 600; color: var(--text); }
   .popover-close {
-    width: 24px; height: 24px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
+    width: 24px; height: 24px; border-radius: 6px; border: none;
+    background: transparent; color: var(--muted); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    transition: background .12s, color .12s;
-    line-height: 1;
+    font-size: 16px; transition: background .12s, color .12s; line-height: 1;
   }
   .popover-close:hover { background: var(--surface2); color: var(--text); }
-
   .popover-body { padding: 16px; overflow-y: auto; max-height: 60vh; }
 
-  /* Note sections inside popover */
   .note-section { margin-bottom: 20px; }
   .note-section:last-child { margin-bottom: 0; }
-
   .note-section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .1em;
-    color: var(--dim);
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    color: var(--dim); text-transform: uppercase; margin-bottom: 8px;
   }
+  .note-description { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.6; }
 
-  .note-description {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 10px;
-    line-height: 1.6;
-  }
-
-  /* Command blocks */
   .cmd-block {
-    background: #0c0f1a;
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    position: relative;
+    background: #0c0f1a; border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px; position: relative;
   }
-
-  .cmd-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--accent);
-    margin-bottom: 6px;
-    letter-spacing: .04em;
-  }
-
-  .cmd-text {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    color: #c9d1e8;
-    white-space: pre-wrap;
-    word-break: break-all;
-    line-height: 1.7;
-  }
-
-  /* Syntax highlighting within commands */
-  .cmd-text .flag { color: var(--amber); }
+  .cmd-label { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-bottom: 6px; letter-spacing: .04em; }
+  .cmd-text { font-family: var(--mono); font-size: 11.5px; color: #c9d1e8; white-space: pre-wrap; word-break: break-all; line-height: 1.7; }
+  .cmd-text .flag  { color: var(--amber); }
   .cmd-text .value { color: var(--green); }
   .cmd-text .param { color: #a78bfa; }
 
   .copy-btn {
-    position: absolute;
-    top: 8px; right: 8px;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--dim);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all .12s;
+    position: absolute; top: 8px; right: 8px;
+    font-family: var(--mono); font-size: 10px; color: var(--dim);
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 4px; cursor: pointer; transition: all .12s;
   }
   .copy-btn:hover { color: var(--text); border-color: var(--border2); }
   .copy-btn.copied { color: var(--green); border-color: var(--green-border); }
 
-  /* Device type table */
   .device-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
   .device-table th {
-    font-family: var(--mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--dim);
-    text-align: left;
-    padding: 6px 10px;
-    border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--dim); text-align: left;
+    padding: 6px 10px; border-bottom: 1px solid var(--border);
   }
-  .device-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
+  .device-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
   .device-table tr:last-child td { border-bottom: none; }
   .device-table .mono { font-family: var(--mono); color: var(--accent); font-size: 11px; }
   .device-table .model { color: var(--muted); }
 
   /* ── Order bar ── */
-  .order-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 1.5rem;
-    align-items: center;
-  }
-
-  .order-input-wrap {
-    position: relative;
-    flex: 1;
-  }
-
+  .order-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; align-items: center; }
+  .order-input-wrap { position: relative; flex: 1; }
   .order-input {
-    width: 100%;
-    font-family: var(--font);
-    font-size: 13px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    padding: 8px 12px;
-    outline: none;
-    transition: border-color .15s;
+    width: 100%; font-family: var(--font); font-size: 13px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text);
+    padding: 8px 12px; outline: none; transition: border-color .15s;
   }
   .order-input::placeholder { color: var(--dim); }
   .order-input:focus { border-color: var(--accent); }
 
   .order-btn {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 14px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--accent-border);
-    background: var(--accent-bg);
-    color: var(--accent);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all .15s;
+    font-family: var(--font); font-size: 13px; font-weight: 500;
+    padding: 8px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--accent-border); background: var(--accent-bg);
+    color: var(--accent); cursor: pointer; white-space: nowrap; transition: all .15s;
   }
   .order-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  .order-pills-wrap {
-    display: none;
-    gap: 6px;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .order-pills-wrap { display: none; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
   .order-pills-wrap.visible { display: flex; }
 
   .order-pill {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 7px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .15s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-family: var(--font); font-size: 13px; font-weight: 500;
+    padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border2);
+    background: transparent; color: var(--muted); cursor: pointer;
+    transition: all .15s ease; display: flex; align-items: center; gap: 6px;
   }
   .order-pill:hover { color: var(--text); background: var(--surface2); }
   .order-pill.active { background: var(--surface2); border-color: var(--accent); color: var(--text); }
 
   .order-pill-delete {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    font-size: 11px;
-    line-height: 1;
-    color: var(--dim);
-    transition: all .12s;
-    margin-left: 2px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%; font-size: 11px;
+    line-height: 1; color: var(--dim); transition: all .12s; margin-left: 2px;
   }
   .order-pill:hover .order-pill-delete,
   .order-pill.active .order-pill-delete { color: var(--muted); }
   .order-pill-delete:hover { background: rgba(239,68,68,0.2); color: #ef4444 !important; }
 
-  /* checklist locked until order selected */
   .checklist-locked { display: none; }
   .checklist-locked.visible { display: block; }
 
   .no-order-msg {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--dim);
-    font-size: 14px;
-    border: 1px dashed var(--border2);
-    border-radius: var(--radius);
+    text-align: center; padding: 3rem 1rem; color: var(--dim);
+    font-size: 14px; border: 1px dashed var(--border2); border-radius: var(--radius);
   }
   .no-order-msg strong { color: var(--muted); display: block; margin-bottom: .4rem; font-size: 15px; }
 
   /* ── Order note + priority ── */
-  .order-note-wrap {
-    display: none;
-    margin-bottom: 1.25rem;
-  }
+  .order-note-wrap { display: none; margin-bottom: 1.25rem; }
   .order-note-wrap.visible { display: block; }
-
-  .order-note-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-
-  .order-note-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .1em;
-    color: var(--dim);
-    text-transform: uppercase;
-    flex: 1;
-  }
-
-  .priority-btns {
-    display: flex;
-    gap: 5px;
-  }
-
-  .priority-btn {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: all .15s;
-    flex-shrink: 0;
-  }
+  .order-note-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .order-note-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; flex: 1; }
+  .priority-btns { display: flex; gap: 5px; }
+  .priority-btn { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all .15s; flex-shrink: 0; }
   .priority-btn.p-red   { background: rgba(239,68,68,0.25);  border-color: rgba(239,68,68,0.4); }
   .priority-btn.p-amber { background: rgba(245,158,11,0.25); border-color: rgba(245,158,11,0.4); }
   .priority-btn.p-green { background: rgba(62,207,142,0.25); border-color: rgba(62,207,142,0.4); }
@@ -513,41 +349,24 @@
   .priority-btn:hover { transform: scale(1.15); }
 
   .order-note-textarea {
-    width: 100%;
-    font-family: var(--font);
-    font-size: 13px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    padding: 10px 12px;
-    resize: vertical;
-    min-height: 72px;
-    outline: none;
-    line-height: 1.6;
-    transition: border-color .15s;
+    width: 100%; font-family: var(--font); font-size: 13px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text);
+    padding: 10px 12px; resize: vertical; min-height: 72px;
+    outline: none; line-height: 1.6; transition: border-color .15s;
   }
   .order-note-textarea::placeholder { color: var(--dim); }
   .order-note-textarea:focus { border-color: var(--accent); }
-
-  /* left border colour based on priority */
   .order-note-textarea.pri-red   { border-left: 3px solid #ef4444; }
   .order-note-textarea.pri-amber { border-left: 3px solid #f59e0b; }
   .order-note-textarea.pri-green { border-left: 3px solid #3ecf8e; }
 
-  .order-note-saved {
-    font-size: 11px;
-    color: var(--dim);
-    margin-top: 5px;
-    height: 14px;
-    transition: opacity .3s;
-  }
+  .order-note-saved { font-size: 11px; color: var(--dim); margin-top: 5px; height: 14px; transition: opacity .3s; }
 
   @media (max-width: 480px) {
     h1 { font-size: 1.3rem; }
     .step { padding: 10px 12px; }
   }
-
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; }
   }
@@ -561,7 +380,6 @@
     <p class="subtitle">Enter an order name to begin · progress saves per order</p>
   </header>
 
-  <!-- Order entry -->
   <div class="order-bar">
     <div class="order-input-wrap">
       <input class="order-input" id="order-input" type="text" placeholder="Enter order name…" onkeydown="handleOrderKey(event)" autocomplete="off" />
@@ -569,29 +387,25 @@
     <button class="order-btn" onclick="loadOrCreateOrder()">Open</button>
   </div>
 
-  <!-- Saved orders as pill tabs -->
   <div class="order-pills-wrap" id="order-pills-wrap"></div>
 
-  <!-- No order state -->
   <div id="no-order-msg" class="no-order-msg">
-    <strong>No order open</strong>Type an order name above and click <em>Open</em> to start — or pick a saved order from the dropdown.
+    <strong>No order open</strong>Type an order name above and click <em>Open</em> to start — or pick a saved order from the list.
   </div>
 
-  <!-- Order note + priority -->
   <div class="order-note-wrap" id="order-note-wrap">
     <div class="order-note-header">
       <span class="order-note-label">Order note</span>
       <div class="priority-btns">
-        <button class="priority-btn p-green" title="Low priority" onclick="setPriority('green')"></button>
+        <button class="priority-btn p-green" title="Low priority"    onclick="setPriority('green')"></button>
         <button class="priority-btn p-amber" title="Medium priority" onclick="setPriority('amber')"></button>
-        <button class="priority-btn p-red"   title="High priority"  onclick="setPriority('red')"></button>
+        <button class="priority-btn p-red"   title="High priority"   onclick="setPriority('red')"></button>
       </div>
     </div>
     <textarea class="order-note-textarea" id="order-note-textarea" placeholder="Add a note for this order…" oninput="saveNote()" rows="3"></textarea>
     <div class="order-note-saved" id="order-note-saved"></div>
   </div>
 
-  <!-- Checklist (hidden until order loaded) -->
   <div class="checklist-locked" id="checklist-wrap">
     <div class="tabs" id="tabs">
       <button class="tab active" onclick="switchMode(0)">KK only</button>
@@ -614,7 +428,6 @@
   </div>
 </div>
 
-<!-- Popover -->
 <div class="popover-backdrop" id="backdrop" onclick="closePopover()"></div>
 <div class="popover" id="popover">
   <div class="popover-header">
@@ -625,7 +438,6 @@
 </div>
 
 <script>
-// ── AA Note definitions ────────────────────────────────────────────────
 const AA_NOTES = {
   register: {
     title: 'Register device — AA notes',
@@ -643,16 +455,12 @@ const AA_NOTES = {
       {
         label: 'Step 1 — Delete existing registration (if re-onboarding)',
         description: 'Clears any stale registration before starting fresh.',
-        commands: [
-          { label: 'delete_reg', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=captis_pulse --delete_reg' }
-        ]
+        commands: [{ label: 'delete_reg', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=captis_pulse --delete_reg' }]
       },
       {
         label: 'Step 2 — Pre-register the device',
         description: 'Creates a pending registration entry on the management tenant.',
-        commands: [
-          { label: 'pre_reg', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=captis_pulse --pre_reg' }
-        ]
+        commands: [{ label: 'pre_reg', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=captis_pulse --pre_reg' }]
       },
       {
         label: 'Step 3 — Onboard as skeleton device',
@@ -665,56 +473,42 @@ const AA_NOTES = {
       {
         label: 'Diagnosis — check group',
         description: 'Use to verify group membership after onboarding. Replace the gid with your actual group ID.',
-        commands: [
-          { label: 'diagnosis', cmd: 'captis-cli.exe diagnosis env=ManagementTenant.txt gid=52216342884 -e' }
-        ]
+        commands: [{ label: 'diagnosis', cmd: 'captis-cli.exe diagnosis env=ManagementTenant.txt gid=52216342884 -e' }]
       },
       {
         label: 'Queue a shell command',
         description: 'Useful for queuing a sleep/wake command after registration.',
-        commands: [
-          { label: 'queue shell', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=captis_pulse_2 shell=shell_sleep.txt --queue' }
-        ]
+        commands: [{ label: 'queue shell', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=captis_pulse_2 shell=shell_sleep.txt --queue' }]
       }
     ]
   },
-
   deviceconfig: {
     title: 'Queue device config — AA notes',
     sections: [
       {
         label: 'Change configuration on Cumulocity',
         description: 'Queue a config file to apply to CaptisS2 devices. Replace the cfg filename with the config you need.',
-        commands: [
-          { label: 'queue config', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=S2FlowKit4_20mAConfiguration.json --queue' }
-        ]
+        commands: [{ label: 'queue config', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=S2FlowKit4_20mAConfiguration.json --queue' }]
       },
       {
         label: 'Disable Bluetooth (Cumulosity only)',
         description: 'Use this config when disabling BLE on Cumulosity-only devices.',
-        commands: [
-          { label: 'disable BLE', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=S2_DissableBLE.txt --queue' }
-        ]
+        commands: [{ label: 'disable BLE', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=S2_DissableBLE.txt --queue' }]
       },
       {
         label: 'Switch to Spark + OneNZ (NZ devices)',
         description: 'Apply this config to NZ devices to switch network provider.',
-        commands: [
-          { label: 'NZ network config', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=S2_NetworkOneNZ_Spark.txt --queue' }
-        ]
+        commands: [{ label: 'NZ network config', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=S2_NetworkOneNZ_Spark.txt --queue' }]
       },
       {
         label: 'Last config + dormant mode (NZ Cumulosity)',
         description: 'Sends the SIM switch and dormant mode together as the final step for NZ Cumulosity devices.',
-        commands: [
-          { label: 'last config NZ', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=LastConfigOneNZ.txt shell=shell_s2sleep.txt --queue' }
-        ]
+        commands: [{ label: 'last config NZ', cmd: 'captis-cli.exe onboard env=ManagementTenant.txt csv=Devices.txt device_type=CaptisS2 cfg=LastConfigOneNZ.txt shell=shell_s2sleep.txt --queue' }]
       }
     ]
   }
 };
 
-// ── Step definitions ───────────────────────────────────────────────────
 const MODES = [
   {
     key: 'kk',
@@ -724,6 +518,7 @@ const MODES = [
       { text: 'Move to account' },
       { text: 'Wake until moved' },
       { text: 'Configure for ticket', note: 'NZ, AU, INT, NB-IoT, CATM1, etc.' },
+      { text: 'Check log time corresponds to ticket' },
       { text: 'Last config', note: 'Switch SIM & dormant mode — do together' },
       { text: 'Update spreadsheet', section: 'Checking' },
       { text: 'Update ticket' },
@@ -740,7 +535,10 @@ const MODES = [
       { text: 'Queue device config', note: 'See AA notes', aaNote: 'deviceconfig' },
       { text: 'Test sensors', note: 'Flow, radar, pressure', badges: ['sensor'] },
       { text: 'Disable Bluetooth' },
+      { text: 'Queue microflow settings cfg by AC', section: 'Microflow / Modbus kit steps' },
+      { text: 'Change wake time to 18 seconds' },
       { text: 'Introduce networks', note: 'See AA notes', section: 'Network' },
+      { text: 'Check log time corresponds to ticket' },
       { text: 'Switch network then dormant mode', note: 'Do together' },
       { text: 'Add dashboard to Cumulosity', section: 'Checking' },
       { text: 'Update spreadsheet' },
@@ -760,7 +558,10 @@ const MODES = [
       { text: 'Test sensors and dual endpoints', note: 'Flow, radar, pressure', badges: ['sensor'] },
       { text: 'Check SLAVE ID', note: 'Dual radar devices only', badges: ['info'] },
       { text: 'Roles clean up' },
+      { text: 'Queue microflow settings cfg by AC', section: 'Microflow / Modbus kit steps' },
+      { text: 'Change wake time to 18 seconds' },
       { text: 'Check networks', section: 'Network' },
+      { text: 'Check log time corresponds to ticket' },
       { text: 'Last config & dormant mode' },
       { text: 'Add dashboard to Cumulosity', section: 'Checking' },
       { text: 'Update spreadsheet' },
@@ -770,14 +571,10 @@ const MODES = [
   }
 ];
 
-// ── State ──────────────────────────────────────────────────────────────
 let currentMode = 0;
-let currentOrder = null; // e.g. "Order 123"
+let currentOrder = null;
 
-// Storage helpers — keyed by order + mode
-function orderModeKey(order, modeKey) {
-  return 'o:' + order + ':' + modeKey;
-}
+function orderModeKey(order, modeKey) { return 'o:' + order + ':' + modeKey; }
 
 function loadChecks(modeKey) {
   if (!currentOrder) return {};
@@ -789,28 +586,18 @@ function saveChecks(modeKey, checks) {
   try { localStorage.setItem(orderModeKey(currentOrder, modeKey), JSON.stringify(checks)); } catch {}
 }
 
-// Order list helpers
 function getOrders() {
   try { return JSON.parse(localStorage.getItem('orders') || '[]'); } catch { return []; }
 }
-
-function saveOrders(list) {
-  try { localStorage.setItem('orders', JSON.stringify(list)); } catch {}
-}
+function saveOrders(list) { try { localStorage.setItem('orders', JSON.stringify(list)); } catch {} }
 
 function addOrderToList(name) {
   const list = getOrders();
   if (!list.includes(name)) { list.unshift(name); saveOrders(list); }
 }
+function removeOrderFromList(name) { saveOrders(getOrders().filter(o => o !== name)); }
 
-function removeOrderFromList(name) {
-  saveOrders(getOrders().filter(o => o !== name));
-}
-
-// ── Order UI ───────────────────────────────────────────────────────────
-function handleOrderKey(e) {
-  if (e.key === 'Enter') loadOrCreateOrder();
-}
+function handleOrderKey(e) { if (e.key === 'Enter') loadOrCreateOrder(); }
 
 function loadOrCreateOrder() {
   const input = document.getElementById('order-input');
@@ -818,11 +605,9 @@ function loadOrCreateOrder() {
   if (!name) { input.focus(); return; }
   currentOrder = name;
   addOrderToList(name);
-  // Restore saved mode for this order
   try {
     const savedMode = parseInt(localStorage.getItem('o:' + name + ':mode') || '0');
-    if (savedMode >= 0 && savedMode < MODES.length) currentMode = savedMode;
-    else currentMode = 0;
+    currentMode = (savedMode >= 0 && savedMode < MODES.length) ? savedMode : 0;
   } catch { currentMode = 0; }
   input.value = '';
   updateOrderUI();
@@ -844,76 +629,56 @@ function switchOrder(name) {
 function deletePill(e, name) {
   e.stopPropagation();
   if (!confirm('Delete order "' + name + '"? This cannot be undone.')) return;
-  MODES.forEach(m => {
-    try { localStorage.removeItem(orderModeKey(name, m.key)); } catch {}
-  });
-  try { localStorage.removeItem('o:' + name + ':mode'); } catch {}
-  try { localStorage.removeItem('o:' + name + ':note'); } catch {}
-  try { localStorage.removeItem('o:' + name + ':priority'); } catch {}
+  MODES.forEach(m => { try { localStorage.removeItem(orderModeKey(name, m.key)); } catch {} });
+  ['mode','note','priority'].forEach(k => { try { localStorage.removeItem('o:' + name + ':' + k); } catch {} });
   removeOrderFromList(name);
-  if (currentOrder === name) {
-    currentOrder = null;
-    currentMode = 0;
-    renderEmpty();
-  }
+  if (currentOrder === name) { currentOrder = null; currentMode = 0; renderEmpty(); }
   updateOrderUI();
 }
 
-// ── Order note + priority ───────────────────────────────────────────────
 function noteKey(order) { return 'o:' + order + ':note'; }
 function priorityKey(order) { return 'o:' + order + ':priority'; }
 
 function loadNote() {
   if (!currentOrder) return;
-  const textarea = document.getElementById('order-note-textarea');
-  const saved = localStorage.getItem(noteKey(currentOrder)) || '';
-  textarea.value = saved;
-  const pri = localStorage.getItem(priorityKey(currentOrder)) || '';
-  applyPriorityUI(pri);
+  document.getElementById('order-note-textarea').value = localStorage.getItem(noteKey(currentOrder)) || '';
+  applyPriorityUI(localStorage.getItem(priorityKey(currentOrder)) || '');
 }
 
 function saveNote() {
   if (!currentOrder) return;
-  const val = document.getElementById('order-note-textarea').value;
-  localStorage.setItem(noteKey(currentOrder), val);
-  const saved = document.getElementById('order-note-saved');
-  saved.textContent = 'Saved';
+  localStorage.setItem(noteKey(currentOrder), document.getElementById('order-note-textarea').value);
+  const el = document.getElementById('order-note-saved');
+  el.textContent = 'Saved';
   clearTimeout(window._noteSaveTimer);
-  window._noteSaveTimer = setTimeout(() => { saved.textContent = ''; }, 1500);
+  window._noteSaveTimer = setTimeout(() => { el.textContent = ''; }, 1500);
 }
 
 function setPriority(color) {
   if (!currentOrder) return;
-  const current = localStorage.getItem(priorityKey(currentOrder)) || '';
-  const next = current === color ? '' : color;
+  const cur = localStorage.getItem(priorityKey(currentOrder)) || '';
+  const next = cur === color ? '' : color;
   localStorage.setItem(priorityKey(currentOrder), next);
   applyPriorityUI(next);
 }
 
 function applyPriorityUI(color) {
   const textarea = document.getElementById('order-note-textarea');
-  const btns = document.querySelectorAll('.priority-btn');
   textarea.className = 'order-note-textarea' + (color ? ' pri-' + color : '');
-  btns.forEach(b => {
-    const isMatch = color && b.classList.contains('p-' + color);
-    b.classList.toggle('selected', !!isMatch);
+  document.querySelectorAll('.priority-btn').forEach(b => {
+    b.classList.toggle('selected', !!(color && b.classList.contains('p-' + color)));
   });
-  // Also update the active order pill border in the pills list
   updatePillColors();
 }
 
 function updatePillColors() {
-  const orders = getOrders();
   const pillsWrap = document.getElementById('order-pills-wrap');
   if (!pillsWrap) return;
-  orders.forEach(o => {
-    const pri = localStorage.getItem(priorityKey(o)) || '';
-    const pills = pillsWrap.querySelectorAll('.order-pill');
-    pills.forEach(p => {
-      if (p.textContent.replace('✕','').trim() === o || p.getAttribute('data-order') === o) {
-        p.style.borderColor = pri === 'red' ? '#ef4444' : pri === 'amber' ? '#f59e0b' : pri === 'green' ? '#3ecf8e' : '';
-      }
-    });
+  pillsWrap.querySelectorAll('.order-pill').forEach(p => {
+    const o = p.getAttribute('data-order');
+    if (!o) return;
+    const pri = localStorage.getItem('o:' + o + ':priority') || '';
+    p.style.borderColor = pri === 'red' ? '#ef4444' : pri === 'amber' ? '#f59e0b' : pri === 'green' ? '#3ecf8e' : '';
   });
 }
 
@@ -924,7 +689,6 @@ function updateOrderUI() {
   const wrap = document.getElementById('checklist-wrap');
   const noteWrap = document.getElementById('order-note-wrap');
 
-  // Render order pills with priority colour borders
   if (orders.length > 0) {
     pillsWrap.classList.add('visible');
     pillsWrap.innerHTML = orders.map(o => {
@@ -933,9 +697,7 @@ function updateOrderUI() {
       const pri = localStorage.getItem('o:' + o + ':priority') || '';
       const borderStyle = pri === 'red' ? 'border-color:#ef4444' : pri === 'amber' ? 'border-color:#f59e0b' : pri === 'green' ? 'border-color:#3ecf8e' : '';
       return '<button class="order-pill' + (isActive ? ' active' : '') + '" data-order="' + safe + '" style="' + borderStyle + '" onclick="switchOrder(\'' + safe + '\')">'
-        + o
-        + '<span class="order-pill-delete" onclick="deletePill(event, \'' + safe + '\')">✕</span>'
-        + '</button>';
+        + o + '<span class="order-pill-delete" onclick="deletePill(event,\'' + safe + '\')">✕</span></button>';
     }).join('');
   } else {
     pillsWrap.classList.remove('visible');
@@ -974,9 +736,7 @@ function toggleStep(idx, e) {
 
 function switchMode(idx) {
   currentMode = idx;
-  if (currentOrder) {
-    try { localStorage.setItem('o:' + currentOrder + ':mode', idx); } catch {}
-  }
+  if (currentOrder) { try { localStorage.setItem('o:' + currentOrder + ':mode', idx); } catch {} }
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
   render();
 }
@@ -988,49 +748,34 @@ function resetCurrent() {
   render();
 }
 
-// ── Popover ────────────────────────────────────────────────────────────
 function openNote(noteKey, e) {
   e && e.stopPropagation();
   const note = AA_NOTES[noteKey];
   if (!note) return;
-
   document.getElementById('popover-title').textContent = note.title;
-
   let html = '';
   note.sections.forEach(sec => {
     html += '<div class="note-section">';
     html += '<div class="note-section-label">' + sec.label + '</div>';
     if (sec.description) html += '<div class="note-description">' + sec.description + '</div>';
-
     if (sec.table) {
       html += '<table class="device-table"><thead><tr><th>device_type</th><th>Hardware model</th></tr></thead><tbody>';
-      sec.table.forEach(row => {
-        html += '<tr><td class="mono">' + row.type + '</td><td class="model">' + row.model + '</td></tr>';
-      });
+      sec.table.forEach(row => { html += '<tr><td class="mono">' + row.type + '</td><td class="model">' + row.model + '</td></tr>'; });
       html += '</tbody></table>';
     }
-
     if (sec.commands) {
       sec.commands.forEach((c, ci) => {
         const id = noteKey + '_' + ci;
-        html += '<div class="cmd-block">';
-        html += '<div class="cmd-label">' + c.label + '</div>';
+        html += '<div class="cmd-block"><div class="cmd-label">' + c.label + '</div>';
         html += '<div class="cmd-text" id="cmd_' + id + '">' + formatCmd(c.cmd) + '</div>';
-        html += '<button class="copy-btn" id="copybtn_' + id + '" onclick="copyCmd(\'' + id + '\', \'' + escapeJs(c.cmd) + '\')">copy</button>';
-        html += '</div>';
+        html += '<button class="copy-btn" id="copybtn_' + id + '" onclick="copyCmd(\'' + id + '\',\'' + escapeJs(c.cmd) + '\')">copy</button></div>';
       });
     }
     html += '</div>';
   });
-
   document.getElementById('popover-body').innerHTML = html;
-
-  // Position the popover centred in viewport
   const pop = document.getElementById('popover');
-  pop.style.top = '50%';
-  pop.style.left = '50%';
-  pop.style.transform = 'translate(-50%, -50%)';
-
+  pop.style.top = '50%'; pop.style.left = '50%'; pop.style.transform = 'translate(-50%,-50%)';
   document.getElementById('backdrop').classList.add('open');
   pop.classList.add('open');
 }
@@ -1041,28 +786,23 @@ function closePopover() {
 }
 
 function formatCmd(cmd) {
-  // Colour flags and values for readability
   return cmd
     .replace(/(--[\w]+)/g, '<span class="flag">$1</span>')
     .replace(/(env|csv|device_type|cfg|shell|gid)=/g, '<span class="param">$1</span>=')
     .replace(/=([\w.\-\\]+)/g, '=<span class="value">$1</span>');
 }
 
-function escapeJs(str) {
-  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-}
+function escapeJs(str) { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
 
 function copyCmd(id, cmd) {
   navigator.clipboard.writeText(cmd).then(() => {
     const btn = document.getElementById('copybtn_' + id);
     if (!btn) return;
-    btn.textContent = 'copied!';
-    btn.classList.add('copied');
+    btn.textContent = 'copied!'; btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1500);
   });
 }
 
-// ── Render ─────────────────────────────────────────────────────────────
 function render() {
   const mode = MODES[currentMode];
   const checks = loadChecks(mode.key);
@@ -1081,21 +821,13 @@ function render() {
       html += '<div class="section-label">' + s.section + '</div>';
       lastSection = s.section;
     }
-
     const isDone = !!checks[i];
     const hasAA = !!s.aaNote;
-
-    // Row click: open note if has one, otherwise toggle
-    const rowClick = hasAA ? 'openNote(\'' + s.aaNote + '\', event)' : 'toggleStep(' + i + ', event)';
+    const rowClick = hasAA ? 'openNote(\'' + s.aaNote + '\',event)' : 'toggleStep(' + i + ',event)';
 
     html += '<div class="step' + (isDone ? ' done' : '') + (hasAA ? ' has-note' : '') + '" onclick="' + rowClick + '">';
     html += '<div class="step-num">' + (i + 1).toString().padStart(2, '0') + '</div>';
-
-    // Checkbox always toggles
-    html += '<div class="check-box" onclick="toggleStep(' + i + ', event)">';
-    html += '<svg class="check-icon" viewBox="0 0 12 12"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>';
-    html += '</div>';
-
+    html += '<div class="check-box" onclick="toggleStep(' + i + ',event)"><svg class="check-icon" viewBox="0 0 12 12"><polyline points="1.5 6 4.5 9 10.5 3"/></svg></div>';
     html += '<div class="step-body">';
     html += '<div class="step-text">' + s.text + '</div>';
     if (s.note) html += '<div class="step-note-short">' + s.note + '</div>';
@@ -1105,25 +837,20 @@ function render() {
       html += '<div class="badges">';
       if (hasBadges) {
         s.badges.forEach(b => {
-          if (b === 'warn') html += '<span class="badge badge-warn">⚠ &lt; v2.6.2 only</span>';
-          if (b === 'info') html += '<span class="badge badge-info">dual radar only</span>';
+          if (b === 'warn')   html += '<span class="badge badge-warn">⚠ &lt; v2.6.2 only</span>';
+          if (b === 'info')   html += '<span class="badge badge-info">dual radar only</span>';
           if (b === 'sensor') html += '<span class="badge badge-sensor">⚠ flow · radar · pressure</span>';
         });
       }
-      if (hasAA) {
-        html += '<span class="note-trigger" onclick="openNote(\'' + s.aaNote + '\', event)">📋 view AA notes</span>';
-      }
+      if (hasAA) html += '<span class="note-trigger" onclick="openNote(\'' + s.aaNote + '\',event)">📋 view AA notes</span>';
       html += '</div>';
     }
-
     html += '</div></div>';
   });
 
   document.getElementById('steps').innerHTML = html;
 }
 
-// ── Init ───────────────────────────────────────────────────────────────
-// Restore last active order on page load
 try {
   const lastOrder = localStorage.getItem('last_order');
   if (lastOrder && getOrders().includes(lastOrder)) {
@@ -1133,10 +860,7 @@ try {
   }
 } catch {}
 
-window.addEventListener('beforeunload', () => {
-  try { if (currentOrder) localStorage.setItem('last_order', currentOrder); } catch {}
-});
-
+window.addEventListener('beforeunload', () => { try { if (currentOrder) localStorage.setItem('last_order', currentOrder); } catch {} });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopover(); });
 
 updateOrderUI();
