@@ -179,6 +179,7 @@
       <button class="tab" data-mode="2">Dual endpoint</button>
       <button class="tab" data-mode="3">WNSW S1 devices</button>
       <button class="tab" data-mode="4">Radar Jig Config</button>
+      <button class="tab" data-mode="5">Cumu to KK</button>
     </div>
     <div class="progress-row">
       <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
@@ -288,6 +289,61 @@ var AA_NOTES = {
       }
     ]
   },
+  cumu2kk: {
+    title: "From Cumulosity to KK - Commands",
+    sections: [
+      {
+        label: "Environment variables - set these first",
+        description: "Run these in your terminal before any other commands.",
+        commands: [
+          { label: "KK API URL", cmd: 'set "KK_API_URL=https://func-p-bulkdeviceonboarding-aue-01.azurewebsites.net/api"' },
+          { label: "KK API KEY", cmd: 'set "KK_API_KEY=<paste-key-here>"' }
+        ]
+      },
+      {
+        label: "S1 only - Step 1: Generate configs",
+        description: "Run both generate_configs commands in sequence.",
+        commands: [
+          { label: "S1 standard config", cmd: 'captis-cli onboard2kk --generate_configs csv=Testdevices.txt cfg=KKProdMigrationS1Only.txt output_dir="C:\\Users\\armaghanc\\OneDrive - MADISON GROUP ENTERPRISES PTY LTD\\Documents\\KK Scripting\\S1Configurations"' },
+          { label: "S1 special config", cmd: 'captis-cli onboard2kk --generate_configs csv=Testdevices.txt cfg=KKProdMigrationS1SpecialOnly.txt output_dir="C:\\Users\\armaghanc\\OneDrive - MADISON GROUP ENTERPRISES PTY LTD\\Documents\\KK Scripting\\S1Configurations"' }
+        ]
+      },
+      {
+        label: "S1 only - Step 2: Add device",
+        description: "Replace device_variant with the correct model from the list below.",
+        commands: [
+          { label: "add_device (S1)", cmd: 'captis-cli.exe onboard2kk --add_device csv=Testdevices.txt device_variant="Captis S1 Pulse v1.2"' }
+        ],
+        variantList: ["Captis S1 Pulse v1.2", "Captis S1 Pulse Lite EA", "Captis S1 Pulse Lite IA", "Captis S1 Multi v1.2", "Captis S1 Recharge v1.2", "Captis S2 Pulse", "Captis S2 Pulse Plus", "Captis S2 Multi Lite", "Captis S2 Multi", "Captis S2 Multi Black"]
+      },
+      {
+        label: "S2 only - Step 1: Generate configs",
+        commands: [
+          { label: "S2 config", cmd: 'captis-cli onboard2kk --generate_configs csv=Testdevices.txt cfg=KKProdMigrationS2Only.txt output_dir="C:\\Users\\armaghanc\\OneDrive - MADISON GROUP ENTERPRISES PTY LTD\\Documents\\KK Scripting\\S2Configurations"' }
+        ]
+      },
+      {
+        label: "S2 only - Step 2: Queue config to device via C8Y",
+        commands: [
+          { label: "queue config (S2)", cmd: 'captis-cli.exe onboard --queue csv=Testdevices.txt cfg_dir="C:\\Users\\armaghanc\\OneDrive - MADISON GROUP ENTERPRISES PTY LTD\\Documents\\KK Scripting\\S2Configurations" env=MCSProdTenant.txt device_type=CaptisS2 --queue' }
+        ]
+      },
+      {
+        label: "S2 only - Step 3: Add device",
+        description: "Replace device_variant with correct model. Then wake the device.",
+        commands: [
+          { label: "add_device (S2)", cmd: 'captis-cli.exe onboard2kk --add_device csv=Testdevices.txt device_variant="Captis S2 Multi Lite"' }
+        ]
+      },
+      {
+        label: "S2 only - Step 4: Queue bootstrap shell command via C8Y",
+        description: "After waking the device, queue this shell command. The device will then appear on KK.",
+        commands: [
+          { label: "bootstrap shell", cmd: "bootstrap,KK_Kallipr_azureDps,fresh_conn,KK_Kallipr_iothub" }
+        ]
+      }
+    ]
+  },
   radarjig: {
     title: "Radar Jig Config - Testing Reference",
     sections: [
@@ -385,6 +441,21 @@ var MODES = [
     key: "radar",
     static: true,
     steps: []
+  },
+  {
+    key: "cumu2kk",
+    steps: [
+      { text: "Set environment variables", note: "KK_API_URL and KK_API_KEY - see AA notes", aaNote: "cumu2kk", section: "Setup" },
+      { text: "S1 only: Generate S1 standard config", aaNote: "cumu2kk", section: "S1 devices" },
+      { text: "S1 only: Generate S1 special config", aaNote: "cumu2kk" },
+      { text: "S1 only: Add device to KK", note: "Check device variant list in AA notes", aaNote: "cumu2kk" },
+      { text: "S2 only: Generate S2 config", aaNote: "cumu2kk", section: "S2 devices" },
+      { text: "S2 only: Queue config to device via C8Y", aaNote: "cumu2kk" },
+      { text: "S2 only: Add device to KK", note: "Check device variant list in AA notes", aaNote: "cumu2kk" },
+      { text: "S2 only: Wake device" },
+      { text: "S2 only: Queue bootstrap shell command via C8Y", note: "bootstrap,KK_Kallipr_azureDps,fresh_conn,KK_Kallipr_iothub", aaNote: "cumu2kk" },
+      { text: "Confirm device appears on KK" }
+    ]
   }
 ];
 
@@ -592,6 +663,13 @@ function openNote(key) {
     }
     if (sec.image) {
       html += "<img class=\"note-image\" src=\"" + sec.image + "\" alt=\"Test reference\">";
+    }
+    if (sec.variantList) {
+      html += "<div style=\"margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;\">";
+      sec.variantList.forEach(function(v) {
+        html += "<span style=\"font-family:var(--mono);font-size:11px;background:var(--surface2);border:1px solid var(--border2);padding:3px 10px;border-radius:999px;color:var(--muted);\">" + v + "</span>";
+      });
+      html += "</div>";
     }
     if (sec.table) {
       html += "<table class=\"device-table\"><thead><tr><th>device_type</th><th>Hardware model</th></tr></thead><tbody>";
